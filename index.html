@@ -12,31 +12,33 @@
         }
 
         :root {
-            --gradient-bg: linear-gradient(135deg, #f5f0ff 0%, #e8f0fe 50%, #ffe8f0 100%);
-            --bg-primary: #f8f4ff;
-            --bg-card: rgba(255, 255, 255, 0.95);
+            --gradient-bg: linear-gradient(135deg, #f0f4ff 0%, #fef3f7 50%, #e8f4ff 100%);
+            --bg-primary: #ffffff;
+            --bg-card: rgba(255, 255, 255, 0.96);
             --text-primary: #1a1a2e;
             --text-secondary: #4a4a6a;
             --text-light: #8888aa;
-            --border: rgba(0, 0, 0, 0.08);
+            --border: rgba(0, 0, 0, 0.06);
             --accent: #6366f1;
             --accent-pink: #ec4899;
-            --accent-orange: #f97316;
-            --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+            --accent-orange: #f59e0b;
+            --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
             --header-bg: rgba(255, 255, 255, 0.95);
             --sidebar-bg: rgba(255, 255, 255, 0.98);
-            --overlay-bg: rgba(0, 0, 0, 0.4);
-            --glass-border: rgba(255, 255, 255, 0.3);
+            --overlay-bg: rgba(0, 0, 0, 0.3);
+            --glass-border: rgba(255, 255, 255, 0.5);
+            --active-glow: 0 0 15px rgba(255, 255, 255, 0.9), 0 0 5px rgba(99, 102, 241, 0.4);
+            --footer-color: #8888aa;
         }
 
         [data-theme="dark"] {
             --gradient-bg: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #1e1a2e 100%);
             --bg-primary: #0f0f1a;
-            --bg-card: rgba(30, 30, 46, 0.95);
-            --text-primary: #ffffff;
-            --text-secondary: #a0a0c0;
-            --text-light: #6a6a8a;
-            --border: rgba(255, 255, 255, 0.08);
+            --bg-card: rgba(30, 30, 46, 0.96);
+            --text-primary: #f0f0f5;
+            --text-secondary: #a0a0b0;
+            --text-light: #6a6a80;
+            --border: rgba(255, 255, 255, 0.06);
             --accent: #818cf8;
             --accent-pink: #f472b6;
             --accent-orange: #fb923c;
@@ -45,6 +47,8 @@
             --sidebar-bg: rgba(26, 26, 46, 0.98);
             --overlay-bg: rgba(0, 0, 0, 0.6);
             --glass-border: rgba(255, 255, 255, 0.1);
+            --active-glow: 0 0 15px rgba(255, 255, 255, 0.5), 0 0 5px rgba(129, 140, 248, 0.5);
+            --footer-color: #6a6a80;
         }
 
         body {
@@ -54,6 +58,8 @@
             min-height: 100vh;
             overflow-x: hidden;
             transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
         }
 
         /* Header */
@@ -65,7 +71,7 @@
             position: sticky;
             top: 0;
             z-index: 90;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
         }
 
         .header-content {
@@ -175,7 +181,7 @@
         .search-input:focus {
             outline: none;
             border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
             transform: scale(1.01);
         }
 
@@ -249,28 +255,11 @@
             color: var(--text-light);
         }
 
-        /* Right Section (Translate + Theme) */
+        /* Right Section - HANYA TEMA */
         .right-section {
             display: flex;
             align-items: center;
             gap: 12px;
-        }
-
-        .lang-toggle {
-            width: 44px;
-            height: 44px;
-            border-radius: 12px;
-            background: rgba(99, 102, 241, 0.1);
-            border: none;
-            cursor: pointer;
-            font-size: 18px;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        .lang-toggle:hover {
-            background: rgba(99, 102, 241, 0.2);
-            transform: scale(1.05);
         }
 
         .theme-toggle {
@@ -368,6 +357,7 @@
             background: transparent;
             color: var(--text-primary);
             transition: all 0.2s;
+            position: relative;
         }
 
         .sidebar-item:hover {
@@ -379,6 +369,27 @@
             background: linear-gradient(135deg, var(--accent), var(--accent-pink));
             color: white;
             box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+            position: relative;
+        }
+
+        .sidebar-item.active::before {
+            content: '';
+            position: absolute;
+            left: -4px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: var(--active-glow);
+            animation: pulseCircle 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulseCircle {
+            0% { transform: translateY(-50%) scale(1); opacity: 1; }
+            50% { transform: translateY(-50%) scale(1.5); opacity: 0.7; }
+            100% { transform: translateY(-50%) scale(1); opacity: 1; }
         }
 
         /* Main Content */
@@ -386,6 +397,7 @@
             max-width: 900px;
             margin: 0 auto;
             padding: 24px 20px;
+            flex: 1;
         }
 
         .page-transition {
@@ -395,6 +407,82 @@
         @keyframes pageFadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Category Grid Style */
+        .category-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(4px);
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--glass-border);
+        }
+
+        .category-title {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent), var(--accent-pink));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .category-item {
+            background: rgba(99, 102, 241, 0.08);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 14px 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .category-item:hover {
+            background: linear-gradient(135deg, var(--accent), var(--accent-pink));
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
+        }
+
+        .category-item .item-icon {
+            font-size: 20px;
+        }
+
+        .back-home-btn {
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid var(--border);
+            border-radius: 40px;
+            padding: 8px 20px;
+            font-size: 14px;
+            cursor: pointer;
+            color: var(--text-primary);
+            transition: all 0.2s;
+            margin-top: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-home-btn:hover {
+            background: var(--accent);
+            color: white;
+            transform: scale(1.02);
         }
 
         /* Result Card */
@@ -466,7 +554,7 @@
 
         /* Tips Box */
         .tips-box {
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(236, 72, 153, 0.08));
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(236, 72, 153, 0.06));
             border-radius: 20px;
             padding: 16px 20px;
             margin-bottom: 30px;
@@ -518,7 +606,27 @@
             transform: scale(1.02);
         }
 
-        /* Welcome Card */
+        /* Footer Credit */
+        .footer-credit {
+            text-align: center;
+            padding: 16px 20px;
+            border-top: 1px solid var(--border);
+            font-size: 12px;
+            color: var(--footer-color);
+            background: var(--bg-card);
+            margin-top: 20px;
+        }
+
+        .footer-credit a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .footer-credit a:hover {
+            color: var(--accent-pink);
+            text-decoration: underline;
+        }
+
         .welcome-card {
             background: var(--bg-card);
             backdrop-filter: blur(4px);
@@ -723,6 +831,9 @@
             .welcome-title {
                 font-size: 22px;
             }
+            .category-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
         }
     </style>
 </head>
@@ -733,19 +844,19 @@
     <div id="sidebar" class="sidebar">
         <div class="sidebar-logo">
             <img src="https://i.ibb.co/XfnrP5wW/Logo-Wobat-News.png" alt="WobahKamus Logo" class="sidebar-logo-img">
-            <h2 id="sidebarTitle">WobahKamus</h2>
-            <p id="sidebarSubtitle">#CariArtiKata | #KamusOnline</p>
+            <h2>WobahKamus</h2>
+            <p>#CariArtiKata | #KamusOnline</p>
         </div>
         <ul class="sidebar-menu">
-            <li class="sidebar-item" data-action="home"><span>🏠</span> <span id="menuHome">Home</span></li>
-            <li class="sidebar-item" data-word="teknologi"><span>💻</span> <span id="menuTech">Teknologi</span></li>
-            <li class="sidebar-item" data-word="politik"><span>🏛️</span> <span id="menuPolitics">Politik</span></li>
-            <li class="sidebar-item" data-word="bisnis"><span>📈</span> <span id="menuBusiness">Bisnis</span></li>
-            <li class="sidebar-item" data-word="olahraga"><span>⚽</span> <span id="menuSports">Olahraga</span></li>
-            <li class="sidebar-item" data-word="pendidikan"><span>📚</span> <span id="menuEducation">Pendidikan</span></li>
-            <li class="sidebar-item" data-word="kesehatan"><span>❤️</span> <span id="menuHealth">Kesehatan</span></li>
-            <li class="sidebar-item" data-word="cinta"><span>💕</span> <span id="menuLove">Cinta</span></li>
-            <li class="sidebar-item" id="historyMenuBtn"><span>📜</span> <span id="menuHistory">Riwayat Pencarian</span></li>
+            <li class="sidebar-item" data-action="home"><span>🏠</span> <span>Home</span></li>
+            <li class="sidebar-item" data-category="teknologi"><span>💻</span> <span>Teknologi</span></li>
+            <li class="sidebar-item" data-category="politik"><span>🏛️</span> <span>Politik</span></li>
+            <li class="sidebar-item" data-category="bisnis"><span>📈</span> <span>Bisnis</span></li>
+            <li class="sidebar-item" data-category="olahraga"><span>⚽</span> <span>Olahraga</span></li>
+            <li class="sidebar-item" data-category="pendidikan"><span>📚</span> <span>Pendidikan</span></li>
+            <li class="sidebar-item" data-category="kesehatan"><span>❤️</span> <span>Kesehatan</span></li>
+            <li class="sidebar-item" data-category="coding"><span>💻</span> <span>Coding</span></li>
+            <li class="sidebar-item" id="historyMenuBtn"><span>📜</span> <span>Riwayat Pencarian</span></li>
         </ul>
     </div>
 
@@ -756,247 +867,273 @@
                 <img src="https://i.ibb.co/XfnrP5wW/Logo-Wobat-News.png" alt="Logo" class="logo-image" id="logoImage">
             </div>
             <div class="logo-text">
-                <h1 id="logoTitle">WobahKamus</h1>
-                <p id="logoSubtitle">#CariArtiKata | #KamusPintar</p>
+                <h1>WobahKamus</h1>
+                <p>#CariArtiKata | #KamusPintar</p>
             </div>
             <div class="search-wrapper">
                 <input type="text" id="searchInput" class="search-input" placeholder="🔍 Cari arti kata..." autocomplete="off">
                 <div id="searchHistory" class="search-history">
                     <div class="history-header">
-                        <span id="historyTitle">📜 Riwayat Pencarian</span>
+                        <span>📜 Riwayat Pencarian</span>
                         <span class="clear-history" id="clearHistory">Hapus Semua</span>
                     </div>
                     <div id="historyList" class="history-list">
-                        <div class="empty-history" id="emptyHistory">✨ Belum ada riwayat</div>
+                        <div class="empty-history">✨ Belum ada riwayat</div>
                     </div>
                 </div>
             </div>
             <div class="right-section">
-                <button class="lang-toggle" id="langToggle">🇮🇩</button>
                 <button class="theme-toggle" id="themeToggle">🌙</button>
             </div>
         </div>
     </header>
 
     <main class="container" id="mainContainer">
-        <!-- Tips Box -->
-        <div class="tips-box" id="tipsBox">
+        <div class="tips-box">
             <div class="tips-icon">💡</div>
             <div class="tips-content">
-                <div class="tips-title" id="tipsTitle">Tips & Saran</div>
-                <div class="tips-text" id="tipsText">Coba cari kata "teknologi", "cinta", atau "politik"</div>
+                <div class="tips-title">Tips & Saran</div>
+                <div class="tips-text" id="tipsText">Coba cari kata "teknologi", "coding", atau "politik"</div>
             </div>
             <button class="tips-refresh" id="refreshTips">⟳ Ganti Tips</button>
         </div>
 
-        <div id="resultContainer">
-            <div class="welcome-card" id="welcomeCard">
-                <div class="welcome-icon">📖</div>
-                <div class="welcome-title" id="welcomeTitle">Selamat Datang di WobahKamus</div>
-                <div class="welcome-text" id="welcomeText">
-                    Kamus pintar untuk mencari arti kata dalam bahasa Indonesia dan Inggris.<br>
-                    Cukup ketik kata yang ingin kamu cari di kotak pencarian!
-                </div>
-                <div class="example-list" id="exampleList">
-                    <button class="example-btn" data-word="teknologi">teknologi</button>
-                    <button class="example-btn" data-word="cinta">cinta</button>
-                    <button class="example-btn" data-word="politik">politik</button>
-                    <button class="example-btn" data-word="bisnis">bisnis</button>
-                </div>
-            </div>
-        </div>
+        <div id="resultContainer"></div>
     </main>
 
-    <!-- Modal History -->
+    <!-- FOOTER CREDIT - Dev K team x Rzone -->
+    <div class="footer-credit">
+        ✨ Dev Rzone x K team ✨
+    </div>
+
     <div id="historyModal" class="modal">
         <div class="modal-content">
             <span class="modal-close" id="closeHistoryModal">×</span>
-            <h2 id="modalHistoryTitle">📜 Riwayat Pencarian</h2>
+            <h2>📜 Riwayat Pencarian</h2>
             <div id="fullHistoryList" class="history-list" style="max-height: 60vh;"></div>
             <button id="clearHistoryFull" style="margin-top: 20px; width: 100%; padding: 12px; background: var(--accent-pink); color: white; border: none; border-radius: 12px; cursor: pointer; font-weight: 600;">Hapus Semua Riwayat</button>
         </div>
     </div>
 
     <div id="cookieConsent" class="cookie-consent">
-        <div class="cookie-text" id="cookieText">🍪 WobahKamus menggunakan cookies untuk pengalaman terbaik.</div>
+        <div class="cookie-text">🍪 WobahKamus menggunakan cookies untuk pengalaman terbaik.</div>
         <button class="cookie-btn" id="acceptCookie">Mengerti</button>
     </div>
 
     <script>
-        // ==========================================
-        // 🔥 API DARI TEMAN LO 🔥
-        // ==========================================
         const API_URL = 'https://tatvva.rzone.web.id/api';
         
-        let currentLang = 'id'; // 'id' or 'en'
         let searchTimeout = null;
         let isHomePage = true;
+        let currentActiveMenu = 'home';
         
-        // ========== TRANSLATIONS ==========
-        const translations = {
-            id: {
-                // Header
-                logoTitle: 'WobahKamus',
-                logoSubtitle: '#CariArtiKata | #KamusPintar',
-                searchPlaceholder: '🔍 Cari arti kata... (contoh: teknologi, cinta)',
-                // Sidebar
-                sidebarTitle: 'WobahKamus',
-                sidebarSubtitle: '#CariArtiKata | #KamusOnline',
-                menuHome: 'Home',
-                menuTech: 'Teknologi',
-                menuPolitics: 'Politik',
-                menuBusiness: 'Bisnis',
-                menuSports: 'Olahraga',
-                menuEducation: 'Pendidikan',
-                menuHealth: 'Kesehatan',
-                menuLove: 'Cinta',
-                menuHistory: 'Riwayat Pencarian',
-                // History
-                historyTitle: '📜 Riwayat Pencarian',
-                clearHistory: 'Hapus Semua',
-                emptyHistory: '✨ Belum ada riwayat',
-                // Tips
-                tipsTitle: '💡 Tips & Saran',
-                tipsDefault: 'Coba cari kata "teknologi", "cinta", atau "politik"',
-                // Welcome
-                welcomeTitle: 'Selamat Datang di WobahKamus',
-                welcomeText: 'Kamus pintar untuk mencari arti kata dalam bahasa Indonesia dan Inggris. Cukup ketik kata yang ingin kamu cari di kotak pencarian!',
-                // Modal
-                modalHistoryTitle: '📜 Riwayat Pencarian',
-                clearAllHistory: 'Hapus Semua Riwayat',
-                // Cookie
-                cookieText: '🍪 WobahKamus menggunakan cookies untuk pengalaman terbaik.',
-                cookieBtn: 'Mengerti',
-                // Loading
-                loading: 'Memuat...',
-                emptyResult: '😞 Tidak ditemukan definisi untuk kata "',
-                emptyResultEnd: '". Coba kata lain.',
-                errorMsg: '❌ Gagal mengambil data. Periksa koneksi internet.'
+        // DATA KATEGORI - CODING (GANTI CINTA)
+        const categoryData = {
+            teknologi: {
+                title: "💻 Teknologi & Elektronik",
+                icon: "💻",
+                items: [
+                    { name: "Televisi", icon: "📺", keyword: "televisi" },
+                    { name: "Smartphone", icon: "📱", keyword: "smartphone" },
+                    { name: "Laptop", icon: "💻", keyword: "laptop" },
+                    { name: "Tablet", icon: "📟", keyword: "tablet" },
+                    { name: "Kamera", icon: "📷", keyword: "kamera" },
+                    { name: "Speaker", icon: "🔊", keyword: "speaker" },
+                    { name: "Headphone", icon: "🎧", keyword: "headphone" },
+                    { name: "Smartwatch", icon: "⌚", keyword: "smartwatch" },
+                    { name: "Konsol Game", icon: "🎮", keyword: "konsol game" },
+                    { name: "Router", icon: "📡", keyword: "router" },
+                    { name: "Printer", icon: "🖨️", keyword: "printer" },
+                    { name: "Proyektor", icon: "📽️", keyword: "proyektor" }
+                ]
             },
-            en: {
-                // Header
-                logoTitle: 'WobahKamus',
-                logoSubtitle: '#WordMeaning | #SmartDictionary',
-                searchPlaceholder: '🔍 Search word meaning... (example: technology, love)',
-                // Sidebar
-                sidebarTitle: 'WobahKamus',
-                sidebarSubtitle: '#WordMeaning | #OnlineDictionary',
-                menuHome: 'Home',
-                menuTech: 'Technology',
-                menuPolitics: 'Politics',
-                menuBusiness: 'Business',
-                menuSports: 'Sports',
-                menuEducation: 'Education',
-                menuHealth: 'Health',
-                menuLove: 'Love',
-                menuHistory: 'Search History',
-                // History
-                historyTitle: '📜 Search History',
-                clearHistory: 'Clear All',
-                emptyHistory: '✨ No history yet',
-                // Tips
-                tipsTitle: '💡 Tips & Suggestions',
-                tipsDefault: 'Try searching for "technology", "love", or "politics"',
-                // Welcome
-                welcomeTitle: 'Welcome to WobahKamus',
-                welcomeText: 'A smart dictionary to find word meanings in English and Indonesian. Just type the word you want to search in the search box!',
-                // Modal
-                modalHistoryTitle: '📜 Search History',
-                clearAllHistory: 'Clear All History',
-                // Cookie
-                cookieText: '🍪 WobahKamus uses cookies for the best experience.',
-                cookieBtn: 'Got it',
-                // Loading
-                loading: 'Loading...',
-                emptyResult: '😞 No definition found for "',
-                emptyResultEnd: '". Try another word.',
-                errorMsg: '❌ Failed to fetch data. Check your internet connection.'
+            politik: {
+                title: "🏛️ Politik & Pemerintahan",
+                icon: "🏛️",
+                items: [
+                    { name: "Presiden", icon: "👨‍💼", keyword: "presiden" },
+                    { name: "DPR", icon: "🏛️", keyword: "dpr" },
+                    { name: "Demokrasi", icon: "🗳️", keyword: "demokrasi" },
+                    { name: "Pemilu", icon: "📊", keyword: "pemilu" },
+                    { name: "Korupsi", icon: "💰", keyword: "korupsi" },
+                    { name: "Kebijakan", icon: "📜", keyword: "kebijakan" },
+                    { name: "Partai Politik", icon: "🎭", keyword: "partai politik" },
+                    { name: "Menteri", icon: "👔", keyword: "menteri" }
+                ]
+            },
+            bisnis: {
+                title: "📈 Bisnis & Ekonomi",
+                icon: "📈",
+                items: [
+                    { name: "Investasi", icon: "💰", keyword: "investasi" },
+                    { name: "Saham", icon: "📊", keyword: "saham" },
+                    { name: "Startup", icon: "🚀", keyword: "startup" },
+                    { name: "E-commerce", icon: "🛒", keyword: "e-commerce" },
+                    { name: "Marketing", icon: "📢", keyword: "marketing" },
+                    { name: "Manajemen", icon: "📋", keyword: "manajemen" },
+                    { name: "Keuangan", icon: "💵", keyword: "keuangan" },
+                    { name: "UMKM", icon: "🏪", keyword: "umkm" }
+                ]
+            },
+            olahraga: {
+                title: "⚽ Olahraga & Fitness",
+                icon: "⚽",
+                items: [
+                    { name: "Sepak Bola", icon: "⚽", keyword: "sepak bola" },
+                    { name: "Basket", icon: "🏀", keyword: "basket" },
+                    { name: "Renang", icon: "🏊", keyword: "renang" },
+                    { name: "Bulutangkis", icon: "🏸", keyword: "bulutangkis" },
+                    { name: "Tenis", icon: "🎾", keyword: "tenis" },
+                    { name: "Voli", icon: "🏐", keyword: "voli" },
+                    { name: "Lari", icon: "🏃", keyword: "lari" },
+                    { name: "Yoga", icon: "🧘", keyword: "yoga" }
+                ]
+            },
+            pendidikan: {
+                title: "📚 Pendidikan & Akademik",
+                icon: "📚",
+                items: [
+                    { name: "Matematika", icon: "➕", keyword: "matematika" },
+                    { name: "Fisika", icon: "⚛️", keyword: "fisika" },
+                    { name: "Kimia", icon: "🧪", keyword: "kimia" },
+                    { name: "Biologi", icon: "🔬", keyword: "biologi" },
+                    { name: "Sejarah", icon: "📜", keyword: "sejarah" },
+                    { name: "Bahasa Inggris", icon: "🇬🇧", keyword: "bahasa inggris" },
+                    { name: "Komputer", icon: "💻", keyword: "komputer" },
+                    { name: "Seni", icon: "🎨", keyword: "seni" }
+                ]
+            },
+            kesehatan: {
+                title: "❤️ Kesehatan & Medis",
+                icon: "❤️",
+                items: [
+                    { name: "Diabetes", icon: "🩸", keyword: "diabetes" },
+                    { name: "Hipertensi", icon: "❤️", keyword: "hipertensi" },
+                    { name: "Gizi", icon: "🥗", keyword: "gizi" },
+                    { name: "Olahraga", icon: "🏃", keyword: "olahraga kesehatan" },
+                    { name: "Mental Health", icon: "🧠", keyword: "kesehatan mental" },
+                    { name: "Vaksin", icon: "💉", keyword: "vaksin" },
+                    { name: "Covid-19", icon: "🦠", keyword: "covid" },
+                    { name: "Tidur", icon: "😴", keyword: "tidur sehat" }
+                ]
+            },
+            coding: {
+                title: "💻 Coding & Programming",
+                icon: "💻",
+                items: [
+                    { name: "Python", icon: "🐍", keyword: "python" },
+                    { name: "JavaScript", icon: "🟨", keyword: "javascript" },
+                    { name: "HTML", icon: "🌐", keyword: "html" },
+                    { name: "CSS", icon: "🎨", keyword: "css" },
+                    { name: "React JS", icon: "⚛️", keyword: "react js" },
+                    { name: "Node JS", icon: "🟢", keyword: "node js" },
+                    { name: "PHP", icon: "🐘", keyword: "php" },
+                    { name: "Java", icon: "☕", keyword: "java" },
+                    { name: "C++", icon: "⚙️", keyword: "c++" },
+                    { name: "C#", icon: "🎮", keyword: "c#" },
+                    { name: "Go Lang", icon: "🏃", keyword: "golang" },
+                    { name: "Swift", icon: "🍎", keyword: "swift" },
+                    { name: "Kotlin", icon: "📱", keyword: "kotlin" },
+                    { name: "TypeScript", icon: "📘", keyword: "typescript" },
+                    { name: "Vue JS", icon: "🟢", keyword: "vue js" },
+                    { name: "Angular", icon: "🅰️", keyword: "angular" },
+                    { name: "Django", icon: "🎸", keyword: "django" },
+                    { name: "Laravel", icon: "🛸", keyword: "laravel" },
+                    { name: "Flask", icon: "🌶️", keyword: "flask" },
+                    { name: "Database", icon: "🗄️", keyword: "database" },
+                    { name: "SQL", icon: "📊", keyword: "sql" },
+                    { name: "Git", icon: "📦", keyword: "git" },
+                    { name: "Docker", icon: "🐳", keyword: "docker" },
+                    { name: "API", icon: "🔌", keyword: "api" },
+                    { name: "AI", icon: "🤖", keyword: "ai" },
+                    { name: "Machine Learning", icon: "🧠", keyword: "machine learning" }
+                ]
             }
         };
         
-        function updateUILanguage() {
-            const t = translations[currentLang];
-            // Header
-            document.getElementById('logoTitle').textContent = t.logoTitle;
-            document.getElementById('logoSubtitle').textContent = t.logoSubtitle;
-            document.getElementById('searchInput').placeholder = t.searchPlaceholder;
-            // Sidebar
-            document.getElementById('sidebarTitle').textContent = t.sidebarTitle;
-            document.getElementById('sidebarSubtitle').textContent = t.sidebarSubtitle;
-            document.getElementById('menuHome').textContent = t.menuHome;
-            document.getElementById('menuTech').textContent = t.menuTech;
-            document.getElementById('menuPolitics').textContent = t.menuPolitics;
-            document.getElementById('menuBusiness').textContent = t.menuBusiness;
-            document.getElementById('menuSports').textContent = t.menuSports;
-            document.getElementById('menuEducation').textContent = t.menuEducation;
-            document.getElementById('menuHealth').textContent = t.menuHealth;
-            document.getElementById('menuLove').textContent = t.menuLove;
-            document.getElementById('menuHistory').textContent = t.menuHistory;
-            // History
-            document.getElementById('historyTitle').textContent = t.historyTitle;
-            document.getElementById('clearHistory').textContent = t.clearHistory;
-            document.getElementById('emptyHistory').textContent = t.emptyHistory;
-            // Tips
-            document.getElementById('tipsTitle').textContent = t.tipsTitle;
-            if (document.getElementById('tipsText').textContent === translations.id.tipsDefault || 
-                document.getElementById('tipsText').textContent === translations.en.tipsDefault) {
-                document.getElementById('tipsText').textContent = t.tipsDefault;
-            }
-            // Welcome
-            document.getElementById('welcomeTitle').textContent = t.welcomeTitle;
-            document.getElementById('welcomeText').textContent = t.welcomeText;
-            // Modal
-            document.getElementById('modalHistoryTitle').textContent = t.modalHistoryTitle;
-            document.getElementById('clearHistoryFull').textContent = t.clearAllHistory;
-            // Cookie
-            document.getElementById('cookieText').textContent = t.cookieText;
-            document.getElementById('acceptCookie').textContent = t.cookieBtn;
-            
-            // Update lang toggle button
-            document.getElementById('langToggle').textContent = currentLang === 'id' ? '🇮🇩' : '🇬🇧';
-        }
-        
-        function toggleLanguage() {
-            currentLang = currentLang === 'id' ? 'en' : 'id';
-            updateUILanguage();
-            // If on home page, refresh welcome card
-            if (isHomePage) {
-                showHomePage();
-            }
-        }
-        
-        // ========== TIPS ==========
-        const tipsListId = [
+        const tipsList = [
             "💡 Coba cari kata 'teknologi' untuk tahu artinya",
-            "💡 Kata 'cinta' punya banyak makna, coba cari!",
-            "💡 Cari kata 'politik' untuk definisi lengkapnya",
-            "💡 Kata 'bisnis' bisa diartikan sebagai kegiatan jual beli",
-            "💡 Coba cari 'olahraga' untuk definisi aktivitas fisik"
-        ];
-        
-        const tipsListEn = [
-            "💡 Try searching for 'technology' to know its meaning",
-            "💡 The word 'love' has many meanings, try it!",
-            "💡 Search for 'politics' for complete definition",
-            "💡 'Business' can be defined as buying and selling activities",
-            "💡 Try 'sports' for definition of physical activity"
+            "💡 Cari 'Xiaomi' - smartphone China dengan harga terjangkau",
+            "💡 Coba cari kata 'Tecno' smartphone berasal dari transsion",
+            "💡 cari 'Infinix' smartphone dari transsion",
+            "💡 Coba cari kata 'Tema' untuk tahu artinya",
         ];
         
         let currentTipIndex = 0;
         
-        function updateTips() {
-            const tipsList = currentLang === 'id' ? tipsListId : tipsListEn;
-            currentTipIndex = (currentTipIndex + 1) % tipsList.length;
-            document.getElementById('tipsText').textContent = tipsList[currentTipIndex];
-        }
-        
         function randomTip() {
-            const tipsList = currentLang === 'id' ? tipsListId : tipsListEn;
             currentTipIndex = Math.floor(Math.random() * tipsList.length);
             document.getElementById('tipsText').textContent = tipsList[currentTipIndex];
         }
         
-        // ========== SEARCH HISTORY ==========
+        function setActiveMenu(menuId) {
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            if (menuId === 'home') {
+                const homeItem = document.querySelector('.sidebar-item[data-action="home"]');
+                if (homeItem) homeItem.classList.add('active');
+                currentActiveMenu = 'home';
+            } else {
+                const targetItem = document.querySelector(`.sidebar-item[data-category="${menuId}"]`);
+                if (targetItem) targetItem.classList.add('active');
+                currentActiveMenu = menuId;
+            }
+        }
+        
+        // SHOW CATEGORY PAGE
+        function showCategoryPage(categoryId) {
+            const container = document.getElementById('resultContainer');
+            const category = categoryData[categoryId];
+            
+            if (!category) {
+                showHomePage();
+                return;
+            }
+            
+            isHomePage = false;
+            setActiveMenu(categoryId);
+            
+            const itemsHtml = category.items.map(item => `
+                <div class="category-item" data-keyword="${item.keyword}">
+                    <span class="item-icon">${item.icon}</span>
+                    <span>${item.name}</span>
+                </div>
+            `).join('');
+            
+            const html = `
+                <div class="category-card">
+                    <div class="category-title">
+                        <span>${category.icon}</span>
+                        <span>${category.title}</span>
+                    </div>
+                    <div class="category-grid">
+                        ${itemsHtml}
+                    </div>
+                    <button class="back-home-btn" id="backHomeBtn">🏠 Kembali ke Home</button>
+                </div>
+            `;
+            
+            container.innerHTML = html;
+            
+            document.querySelectorAll('.category-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const keyword = item.dataset.keyword;
+                    document.getElementById('searchInput').value = keyword;
+                    fetchDefinition(keyword, true);
+                });
+            });
+            
+            const backBtn = document.getElementById('backHomeBtn');
+            if (backBtn) {
+                backBtn.addEventListener('click', () => {
+                    goHome();
+                });
+            }
+        }
+        
+        // SEARCH HISTORY
         function getSearchHistory() {
             const history = localStorage.getItem('wobahkamus_search_history');
             return history ? JSON.parse(history) : [];
@@ -1028,7 +1165,7 @@
             const historyList = document.getElementById('historyList');
             
             if (history.length === 0) {
-                historyList.innerHTML = `<div class="empty-history">${translations[currentLang].emptyHistory}</div>`;
+                historyList.innerHTML = `<div class="empty-history">✨ Belum ada riwayat</div>`;
                 return;
             }
             
@@ -1054,7 +1191,7 @@
             const fullHistoryList = document.getElementById('fullHistoryList');
             
             if (history.length === 0) {
-                fullHistoryList.innerHTML = `<div class="empty-history">${translations[currentLang].emptyHistory}</div>`;
+                fullHistoryList.innerHTML = `<div class="empty-history">✨ Belum ada riwayat</div>`;
                 return;
             }
             
@@ -1076,7 +1213,7 @@
             });
         }
         
-        // ========== FETCH DEFINISI ==========
+        // FETCH DEFINISI
         async function fetchDefinition(word, saveToHistory = false) {
             const container = document.getElementById('resultContainer');
             isHomePage = false;
@@ -1086,7 +1223,7 @@
                 return;
             }
             
-            container.innerHTML = `<div class="loading"><div class="loading-spinner"></div> ${translations[currentLang].loading}</div>`;
+            container.innerHTML = `<div class="loading"><div class="loading-spinner"></div> Memuat definisi "${word}"...</div>`;
             
             if (saveToHistory) {
                 addToSearchHistory(word);
@@ -1099,11 +1236,11 @@
                 if (data && data.answer) {
                     displayDefinition(data, word);
                 } else {
-                    container.innerHTML = `<div class="empty-state">${translations[currentLang].emptyResult}${word}${translations[currentLang].emptyResultEnd}</div>`;
+                    container.innerHTML = `<div class="empty-state">😞 Tidak ditemukan definisi untuk kata "${word}". Coba kata lain.</div>`;
                 }
             } catch (error) {
                 console.error('Error:', error);
-                container.innerHTML = `<div class="empty-state">${translations[currentLang].errorMsg}</div>`;
+                container.innerHTML = `<div class="empty-state">❌ Gagal mengambil data. Periksa koneksi internet.</div>`;
             }
         }
         
@@ -1116,7 +1253,7 @@
             mainContainer.classList.add('page-transition');
             
             const formattedAnswer = data.answer.replace(/\n/g, '<br><br>');
-            const sourcesList = data.sources.map(source => `<li class="source-item"><a href="${source}" target="_blank" rel="noopener noreferrer">${source}</a></li>`).join('');
+            const sourcesList = (data.sources || []).map(source => `<li class="source-item"><a href="${source}" target="_blank" rel="noopener noreferrer">${source}</a></li>`).join('');
             
             const html = `
                 <div class="result-card">
@@ -1126,30 +1263,42 @@
                         <div class="sources-title">🔗 Sumber Referensi:</div>
                         <ul class="source-list">${sourcesList}</ul>
                     </div>
+                    <button class="back-home-btn" id="backHomeBtnResult" style="margin-top: 20px;">🏠 Kembali ke Home</button>
                 </div>
             `;
             
             container.innerHTML = html;
+            
+            const backBtn = document.getElementById('backHomeBtnResult');
+            if (backBtn) {
+                backBtn.addEventListener('click', () => {
+                    goHome();
+                });
+            }
         }
         
-        // ========== SHOW HOME PAGE ==========
+        // SHOW HOME PAGE
         function showHomePage() {
             isHomePage = true;
             const container = document.getElementById('resultContainer');
-            const t = translations[currentLang];
+            setActiveMenu('home');
             
             const html = `
                 <div class="welcome-card">
                     <div class="welcome-icon">📖</div>
-                    <div class="welcome-title">${t.welcomeTitle}</div>
-                    <div class="welcome-text">${t.welcomeText}</div>
+                    <div class="welcome-title">Selamat Datang di WobahKamus</div>
+                    <div class="welcome-text">
+                        Kamus pintar untuk mencari arti kata dalam bahasa Indonesia.<br>
+                        Cukup ketik kata yang ingin kamu cari di kotak pencarian!<br>
+                        Atau pilih kategori di menu samping.
+                    </div>
                     <div class="example-list">
                         <button class="example-btn" data-word="teknologi">teknologi</button>
-                        <button class="example-btn" data-word="cinta">cinta</button>
+                        <button class="example-btn" data-word="python">python</button>
+                        <button class="example-btn" data-word="javascript">javascript</button>
                         <button class="example-btn" data-word="politik">politik</button>
                         <button class="example-btn" data-word="bisnis">bisnis</button>
                         <button class="example-btn" data-word="olahraga">olahraga</button>
-                        <button class="example-btn" data-word="pendidikan">pendidikan</button>
                     </div>
                 </div>
             `;
@@ -1164,7 +1313,7 @@
             });
         }
         
-        // ========== SETUP SEARCH ==========
+        // SETUP SEARCH
         function setupSearch() {
             const searchInput = document.getElementById('searchInput');
             
@@ -1214,19 +1363,7 @@
             });
         }
         
-        // ========== SIDEBAR & OTHER ==========
-        function changeWord(word) {
-            document.getElementById('searchInput').value = word;
-            fetchDefinition(word, true);
-            if (window.innerWidth <= 768) closeSidebar();
-        }
-        
-        function goHome() {
-            document.getElementById('searchInput').value = '';
-            showHomePage();
-            if (window.innerWidth <= 768) closeSidebar();
-        }
-        
+        // SIDEBAR
         function openSidebar() {
             document.getElementById('sidebar').classList.add('active');
             document.getElementById('sidebarOverlay').classList.add('active');
@@ -1241,11 +1378,16 @@
             document.body.style.overflow = '';
         }
         
+        function goHome() {
+            document.getElementById('searchInput').value = '';
+            showHomePage();
+            if (window.innerWidth <= 768) closeSidebar();
+        }
+        
         function initTheme() {
-            const saved = localStorage.getItem('theme') || 'light';
-            document.documentElement.setAttribute('data-theme', saved);
+            document.documentElement.setAttribute('data-theme', 'light');
             const toggle = document.getElementById('themeToggle');
-            toggle.textContent = saved === 'dark' ? '☀️' : '🌙';
+            toggle.textContent = '🌙';
             toggle.addEventListener('click', () => {
                 const current = document.documentElement.getAttribute('data-theme');
                 const next = current === 'dark' ? 'light' : 'dark';
@@ -1274,9 +1416,11 @@
             });
             document.getElementById('sidebarOverlay').addEventListener('click', closeSidebar);
             
-            document.querySelectorAll('.sidebar-item[data-word]').forEach(item => {
+            document.querySelectorAll('.sidebar-item[data-category]').forEach(item => {
                 item.addEventListener('click', () => {
-                    changeWord(item.dataset.word);
+                    const category = item.dataset.category;
+                    showCategoryPage(category);
+                    if (window.innerWidth <= 768) closeSidebar();
                 });
             });
             
@@ -1309,7 +1453,6 @@
             });
             
             document.getElementById('refreshTips').addEventListener('click', randomTip);
-            document.getElementById('langToggle').addEventListener('click', toggleLanguage);
             
             window.addEventListener('click', (e) => {
                 if (e.target === document.getElementById('historyModal')) {
@@ -1328,7 +1471,7 @@
             renderSearchHistory();
             renderFullHistory();
             randomTip();
-            updateUILanguage();
+            showHomePage();
         }
         
         init();
