@@ -1,0 +1,1337 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>WobahKamus | Kamus Pintar</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --gradient-bg: linear-gradient(135deg, #f5f0ff 0%, #e8f0fe 50%, #ffe8f0 100%);
+            --bg-primary: #f8f4ff;
+            --bg-card: rgba(255, 255, 255, 0.95);
+            --text-primary: #1a1a2e;
+            --text-secondary: #4a4a6a;
+            --text-light: #8888aa;
+            --border: rgba(0, 0, 0, 0.08);
+            --accent: #6366f1;
+            --accent-pink: #ec4899;
+            --accent-orange: #f97316;
+            --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+            --header-bg: rgba(255, 255, 255, 0.95);
+            --sidebar-bg: rgba(255, 255, 255, 0.98);
+            --overlay-bg: rgba(0, 0, 0, 0.4);
+            --glass-border: rgba(255, 255, 255, 0.3);
+        }
+
+        [data-theme="dark"] {
+            --gradient-bg: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #1e1a2e 100%);
+            --bg-primary: #0f0f1a;
+            --bg-card: rgba(30, 30, 46, 0.95);
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0c0;
+            --text-light: #6a6a8a;
+            --border: rgba(255, 255, 255, 0.08);
+            --accent: #818cf8;
+            --accent-pink: #f472b6;
+            --accent-orange: #fb923c;
+            --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            --header-bg: rgba(26, 26, 46, 0.95);
+            --sidebar-bg: rgba(26, 26, 46, 0.98);
+            --overlay-bg: rgba(0, 0, 0, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+            background: var(--gradient-bg);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            transition: all 0.3s;
+        }
+
+        /* Header */
+        .header {
+            background: var(--header-bg);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 12px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 90;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .left-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .hamburger {
+            width: 44px;
+            height: 44px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            background: rgba(99, 102, 241, 0.1);
+            border: none;
+            border-radius: 12px;
+            transition: all 0.3s;
+        }
+
+        .hamburger:hover {
+            background: rgba(99, 102, 241, 0.2);
+            transform: scale(1.02);
+        }
+
+        .hamburger span {
+            width: 24px;
+            height: 2px;
+            background: var(--accent);
+            border-radius: 2px;
+            transition: all 0.3s;
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(6px, 6px);
+            background: var(--accent-pink);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+            transform: translateX(-10px);
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(6px, -6px);
+            background: var(--accent-pink);
+        }
+
+        .logo-image {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .logo-image:hover {
+            transform: scale(1.05) rotate(5deg);
+        }
+
+        .logo-text h1 {
+            font-size: 24px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-pink) 50%, var(--accent-orange) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .logo-text p {
+            font-size: 10px;
+            color: var(--text-secondary);
+        }
+
+        /* Search */
+        .search-wrapper {
+            flex: 2;
+            max-width: 380px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 20px;
+            border: 1px solid var(--border);
+            border-radius: 40px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+            transform: scale(1.01);
+        }
+
+        /* Search History */
+        .search-history {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            border-radius: 16px;
+            margin-top: 8px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--border);
+            z-index: 95;
+            display: none;
+            overflow: hidden;
+        }
+
+        .search-history.show {
+            display: block;
+            animation: fadeInDown 0.2s ease;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 16px;
+            border-bottom: 1px solid var(--border);
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .clear-history {
+            cursor: pointer;
+            color: var(--accent-pink);
+        }
+
+        .history-list {
+            max-height: 250px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            padding: 10px 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .history-item:hover {
+            background: var(--bg-primary);
+            padding-left: 20px;
+        }
+
+        .empty-history {
+            padding: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        /* Right Section (Translate + Theme) */
+        .right-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .lang-toggle {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: rgba(99, 102, 241, 0.1);
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .lang-toggle:hover {
+            background: rgba(99, 102, 241, 0.2);
+            transform: scale(1.05);
+        }
+
+        .theme-toggle {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: rgba(99, 102, 241, 0.1);
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            transition: all 0.3s;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(99, 102, 241, 0.2);
+            transform: rotate(15deg);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 280px;
+            height: 100%;
+            background: var(--sidebar-bg);
+            backdrop-filter: blur(20px);
+            box-shadow: 2px 0 20px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+            transition: left 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            padding-top: 20px;
+            overflow-y: auto;
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .sidebar-logo {
+            text-align: center;
+            padding: 20px 16px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 16px;
+        }
+
+        .sidebar-logo-img {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            border-radius: 16px;
+            margin-bottom: 10px;
+        }
+
+        .sidebar-logo h2 {
+            font-size: 18px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent), var(--accent-pink));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--overlay-bg);
+            z-index: 99;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 0 16px;
+        }
+
+        .sidebar-item {
+            padding: 12px 16px;
+            margin: 4px 0;
+            border-radius: 14px;
+            cursor: pointer;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: transparent;
+            color: var(--text-primary);
+            transition: all 0.2s;
+        }
+
+        .sidebar-item:hover {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(236, 72, 153, 0.1));
+            transform: translateX(5px);
+        }
+
+        .sidebar-item.active {
+            background: linear-gradient(135deg, var(--accent), var(--accent-pink));
+            color: white;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 20px;
+        }
+
+        .page-transition {
+            animation: pageFadeIn 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+
+        @keyframes pageFadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Result Card */
+        .result-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(4px);
+            border-radius: 24px;
+            padding: 28px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--glass-border);
+            animation: fadeInUp 0.4s ease;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-word {
+            font-size: 32px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent), var(--accent-pink));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 20px;
+            text-transform: lowercase;
+        }
+
+        .result-answer {
+            font-size: 16px;
+            line-height: 1.8;
+            color: var(--text-primary);
+            white-space: pre-wrap;
+            margin-bottom: 24px;
+        }
+
+        .sources-section {
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        .sources-title {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--text-secondary);
+        }
+
+        .source-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            list-style: none;
+        }
+
+        .source-item a {
+            font-size: 12px;
+            color: var(--accent);
+            text-decoration: none;
+            word-break: break-all;
+        }
+
+        .source-item a:hover {
+            color: var(--accent-pink);
+            text-decoration: underline;
+        }
+
+        /* Tips Box */
+        .tips-box {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(236, 72, 153, 0.08));
+            border-radius: 20px;
+            padding: 16px 20px;
+            margin-bottom: 30px;
+            border: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .tips-icon {
+            font-size: 32px;
+        }
+
+        .tips-content {
+            flex: 1;
+        }
+
+        .tips-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--accent-pink);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .tips-text {
+            font-size: 14px;
+            color: var(--text-primary);
+            line-height: 1.5;
+        }
+
+        .tips-refresh {
+            background: rgba(99, 102, 241, 0.15);
+            border: none;
+            border-radius: 40px;
+            padding: 8px 16px;
+            font-size: 12px;
+            cursor: pointer;
+            color: var(--accent);
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .tips-refresh:hover {
+            background: var(--accent);
+            color: white;
+            transform: scale(1.02);
+        }
+
+        /* Welcome Card */
+        .welcome-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(4px);
+            border-radius: 24px;
+            padding: 40px 28px;
+            text-align: center;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--glass-border);
+            animation: fadeInUp 0.4s ease;
+        }
+
+        .welcome-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .welcome-title {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent), var(--accent-pink));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 16px;
+        }
+
+        .welcome-text {
+            font-size: 16px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        .example-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .example-btn {
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid var(--border);
+            border-radius: 40px;
+            padding: 8px 20px;
+            font-size: 14px;
+            cursor: pointer;
+            color: var(--text-primary);
+            transition: all 0.2s;
+        }
+
+        .example-btn:hover {
+            background: var(--accent);
+            color: white;
+            transform: scale(1.02);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 60px;
+        }
+
+        .loading-spinner {
+            width: 45px;
+            height: 45px;
+            border: 3px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            margin: 0 auto 16px;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px;
+            color: var(--text-secondary);
+        }
+
+        .cookie-consent {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            max-width: 360px;
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            border-radius: 20px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            box-shadow: var(--card-shadow);
+            z-index: 98;
+            transform: translateY(150%);
+            transition: transform 0.4s;
+            border: 1px solid var(--glass-border);
+        }
+
+        .cookie-consent.show {
+            transform: translateY(0);
+        }
+
+        .cookie-btn {
+            padding: 8px 16px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-pink));
+            color: white;
+            border: none;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 200;
+            overflow-y: auto;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            max-width: 500px;
+            width: 90%;
+            margin: 50px auto;
+            border-radius: 28px;
+            padding: 24px;
+            position: relative;
+            transform: scale(0.96);
+            transition: transform 0.35s;
+            border: 1px solid var(--glass-border);
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        .modal.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-close {
+            position: sticky;
+            top: 0;
+            float: right;
+            font-size: 28px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.05);
+            z-index: 10;
+        }
+
+        .modal-close:hover {
+            background: var(--accent);
+            color: white;
+            transform: rotate(90deg);
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-wrap: wrap;
+            }
+            .search-wrapper {
+                order: 3;
+                max-width: 100%;
+                width: 100%;
+            }
+            .logo-text {
+                display: none;
+            }
+            .right-section {
+                order: 4;
+            }
+            .result-word {
+                font-size: 24px;
+            }
+            .tips-box {
+                flex-direction: column;
+                text-align: center;
+            }
+            .welcome-title {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+    <div id="sidebar" class="sidebar">
+        <div class="sidebar-logo">
+            <img src="https://i.ibb.co/XfnrP5wW/Logo-Wobat-News.png" alt="WobahKamus Logo" class="sidebar-logo-img">
+            <h2 id="sidebarTitle">WobahKamus</h2>
+            <p id="sidebarSubtitle">#CariArtiKata | #KamusOnline</p>
+        </div>
+        <ul class="sidebar-menu">
+            <li class="sidebar-item" data-action="home"><span>🏠</span> <span id="menuHome">Home</span></li>
+            <li class="sidebar-item" data-word="teknologi"><span>💻</span> <span id="menuTech">Teknologi</span></li>
+            <li class="sidebar-item" data-word="politik"><span>🏛️</span> <span id="menuPolitics">Politik</span></li>
+            <li class="sidebar-item" data-word="bisnis"><span>📈</span> <span id="menuBusiness">Bisnis</span></li>
+            <li class="sidebar-item" data-word="olahraga"><span>⚽</span> <span id="menuSports">Olahraga</span></li>
+            <li class="sidebar-item" data-word="pendidikan"><span>📚</span> <span id="menuEducation">Pendidikan</span></li>
+            <li class="sidebar-item" data-word="kesehatan"><span>❤️</span> <span id="menuHealth">Kesehatan</span></li>
+            <li class="sidebar-item" data-word="cinta"><span>💕</span> <span id="menuLove">Cinta</span></li>
+            <li class="sidebar-item" id="historyMenuBtn"><span>📜</span> <span id="menuHistory">Riwayat Pencarian</span></li>
+        </ul>
+    </div>
+
+    <header class="header">
+        <div class="header-content">
+            <div class="left-section">
+                <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+                <img src="https://i.ibb.co/XfnrP5wW/Logo-Wobat-News.png" alt="Logo" class="logo-image" id="logoImage">
+            </div>
+            <div class="logo-text">
+                <h1 id="logoTitle">WobahKamus</h1>
+                <p id="logoSubtitle">#CariArtiKata | #KamusPintar</p>
+            </div>
+            <div class="search-wrapper">
+                <input type="text" id="searchInput" class="search-input" placeholder="🔍 Cari arti kata..." autocomplete="off">
+                <div id="searchHistory" class="search-history">
+                    <div class="history-header">
+                        <span id="historyTitle">📜 Riwayat Pencarian</span>
+                        <span class="clear-history" id="clearHistory">Hapus Semua</span>
+                    </div>
+                    <div id="historyList" class="history-list">
+                        <div class="empty-history" id="emptyHistory">✨ Belum ada riwayat</div>
+                    </div>
+                </div>
+            </div>
+            <div class="right-section">
+                <button class="lang-toggle" id="langToggle">🇮🇩</button>
+                <button class="theme-toggle" id="themeToggle">🌙</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container" id="mainContainer">
+        <!-- Tips Box -->
+        <div class="tips-box" id="tipsBox">
+            <div class="tips-icon">💡</div>
+            <div class="tips-content">
+                <div class="tips-title" id="tipsTitle">Tips & Saran</div>
+                <div class="tips-text" id="tipsText">Coba cari kata "teknologi", "cinta", atau "politik"</div>
+            </div>
+            <button class="tips-refresh" id="refreshTips">⟳ Ganti Tips</button>
+        </div>
+
+        <div id="resultContainer">
+            <div class="welcome-card" id="welcomeCard">
+                <div class="welcome-icon">📖</div>
+                <div class="welcome-title" id="welcomeTitle">Selamat Datang di WobahKamus</div>
+                <div class="welcome-text" id="welcomeText">
+                    Kamus pintar untuk mencari arti kata dalam bahasa Indonesia dan Inggris.<br>
+                    Cukup ketik kata yang ingin kamu cari di kotak pencarian!
+                </div>
+                <div class="example-list" id="exampleList">
+                    <button class="example-btn" data-word="teknologi">teknologi</button>
+                    <button class="example-btn" data-word="cinta">cinta</button>
+                    <button class="example-btn" data-word="politik">politik</button>
+                    <button class="example-btn" data-word="bisnis">bisnis</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal History -->
+    <div id="historyModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" id="closeHistoryModal">×</span>
+            <h2 id="modalHistoryTitle">📜 Riwayat Pencarian</h2>
+            <div id="fullHistoryList" class="history-list" style="max-height: 60vh;"></div>
+            <button id="clearHistoryFull" style="margin-top: 20px; width: 100%; padding: 12px; background: var(--accent-pink); color: white; border: none; border-radius: 12px; cursor: pointer; font-weight: 600;">Hapus Semua Riwayat</button>
+        </div>
+    </div>
+
+    <div id="cookieConsent" class="cookie-consent">
+        <div class="cookie-text" id="cookieText">🍪 WobahKamus menggunakan cookies untuk pengalaman terbaik.</div>
+        <button class="cookie-btn" id="acceptCookie">Mengerti</button>
+    </div>
+
+    <script>
+        // ==========================================
+        // 🔥 API DARI TEMAN LO 🔥
+        // ==========================================
+        const API_URL = 'https://tatvva.rzone.web.id/api';
+        
+        let currentLang = 'id'; // 'id' or 'en'
+        let searchTimeout = null;
+        let isHomePage = true;
+        
+        // ========== TRANSLATIONS ==========
+        const translations = {
+            id: {
+                // Header
+                logoTitle: 'WobahKamus',
+                logoSubtitle: '#CariArtiKata | #KamusPintar',
+                searchPlaceholder: '🔍 Cari arti kata... (contoh: teknologi, cinta)',
+                // Sidebar
+                sidebarTitle: 'WobahKamus',
+                sidebarSubtitle: '#CariArtiKata | #KamusOnline',
+                menuHome: 'Home',
+                menuTech: 'Teknologi',
+                menuPolitics: 'Politik',
+                menuBusiness: 'Bisnis',
+                menuSports: 'Olahraga',
+                menuEducation: 'Pendidikan',
+                menuHealth: 'Kesehatan',
+                menuLove: 'Cinta',
+                menuHistory: 'Riwayat Pencarian',
+                // History
+                historyTitle: '📜 Riwayat Pencarian',
+                clearHistory: 'Hapus Semua',
+                emptyHistory: '✨ Belum ada riwayat',
+                // Tips
+                tipsTitle: '💡 Tips & Saran',
+                tipsDefault: 'Coba cari kata "teknologi", "cinta", atau "politik"',
+                // Welcome
+                welcomeTitle: 'Selamat Datang di WobahKamus',
+                welcomeText: 'Kamus pintar untuk mencari arti kata dalam bahasa Indonesia dan Inggris. Cukup ketik kata yang ingin kamu cari di kotak pencarian!',
+                // Modal
+                modalHistoryTitle: '📜 Riwayat Pencarian',
+                clearAllHistory: 'Hapus Semua Riwayat',
+                // Cookie
+                cookieText: '🍪 WobahKamus menggunakan cookies untuk pengalaman terbaik.',
+                cookieBtn: 'Mengerti',
+                // Loading
+                loading: 'Memuat...',
+                emptyResult: '😞 Tidak ditemukan definisi untuk kata "',
+                emptyResultEnd: '". Coba kata lain.',
+                errorMsg: '❌ Gagal mengambil data. Periksa koneksi internet.'
+            },
+            en: {
+                // Header
+                logoTitle: 'WobahKamus',
+                logoSubtitle: '#WordMeaning | #SmartDictionary',
+                searchPlaceholder: '🔍 Search word meaning... (example: technology, love)',
+                // Sidebar
+                sidebarTitle: 'WobahKamus',
+                sidebarSubtitle: '#WordMeaning | #OnlineDictionary',
+                menuHome: 'Home',
+                menuTech: 'Technology',
+                menuPolitics: 'Politics',
+                menuBusiness: 'Business',
+                menuSports: 'Sports',
+                menuEducation: 'Education',
+                menuHealth: 'Health',
+                menuLove: 'Love',
+                menuHistory: 'Search History',
+                // History
+                historyTitle: '📜 Search History',
+                clearHistory: 'Clear All',
+                emptyHistory: '✨ No history yet',
+                // Tips
+                tipsTitle: '💡 Tips & Suggestions',
+                tipsDefault: 'Try searching for "technology", "love", or "politics"',
+                // Welcome
+                welcomeTitle: 'Welcome to WobahKamus',
+                welcomeText: 'A smart dictionary to find word meanings in English and Indonesian. Just type the word you want to search in the search box!',
+                // Modal
+                modalHistoryTitle: '📜 Search History',
+                clearAllHistory: 'Clear All History',
+                // Cookie
+                cookieText: '🍪 WobahKamus uses cookies for the best experience.',
+                cookieBtn: 'Got it',
+                // Loading
+                loading: 'Loading...',
+                emptyResult: '😞 No definition found for "',
+                emptyResultEnd: '". Try another word.',
+                errorMsg: '❌ Failed to fetch data. Check your internet connection.'
+            }
+        };
+        
+        function updateUILanguage() {
+            const t = translations[currentLang];
+            // Header
+            document.getElementById('logoTitle').textContent = t.logoTitle;
+            document.getElementById('logoSubtitle').textContent = t.logoSubtitle;
+            document.getElementById('searchInput').placeholder = t.searchPlaceholder;
+            // Sidebar
+            document.getElementById('sidebarTitle').textContent = t.sidebarTitle;
+            document.getElementById('sidebarSubtitle').textContent = t.sidebarSubtitle;
+            document.getElementById('menuHome').textContent = t.menuHome;
+            document.getElementById('menuTech').textContent = t.menuTech;
+            document.getElementById('menuPolitics').textContent = t.menuPolitics;
+            document.getElementById('menuBusiness').textContent = t.menuBusiness;
+            document.getElementById('menuSports').textContent = t.menuSports;
+            document.getElementById('menuEducation').textContent = t.menuEducation;
+            document.getElementById('menuHealth').textContent = t.menuHealth;
+            document.getElementById('menuLove').textContent = t.menuLove;
+            document.getElementById('menuHistory').textContent = t.menuHistory;
+            // History
+            document.getElementById('historyTitle').textContent = t.historyTitle;
+            document.getElementById('clearHistory').textContent = t.clearHistory;
+            document.getElementById('emptyHistory').textContent = t.emptyHistory;
+            // Tips
+            document.getElementById('tipsTitle').textContent = t.tipsTitle;
+            if (document.getElementById('tipsText').textContent === translations.id.tipsDefault || 
+                document.getElementById('tipsText').textContent === translations.en.tipsDefault) {
+                document.getElementById('tipsText').textContent = t.tipsDefault;
+            }
+            // Welcome
+            document.getElementById('welcomeTitle').textContent = t.welcomeTitle;
+            document.getElementById('welcomeText').textContent = t.welcomeText;
+            // Modal
+            document.getElementById('modalHistoryTitle').textContent = t.modalHistoryTitle;
+            document.getElementById('clearHistoryFull').textContent = t.clearAllHistory;
+            // Cookie
+            document.getElementById('cookieText').textContent = t.cookieText;
+            document.getElementById('acceptCookie').textContent = t.cookieBtn;
+            
+            // Update lang toggle button
+            document.getElementById('langToggle').textContent = currentLang === 'id' ? '🇮🇩' : '🇬🇧';
+        }
+        
+        function toggleLanguage() {
+            currentLang = currentLang === 'id' ? 'en' : 'id';
+            updateUILanguage();
+            // If on home page, refresh welcome card
+            if (isHomePage) {
+                showHomePage();
+            }
+        }
+        
+        // ========== TIPS ==========
+        const tipsListId = [
+            "💡 Coba cari kata 'teknologi' untuk tahu artinya",
+            "💡 Kata 'cinta' punya banyak makna, coba cari!",
+            "💡 Cari kata 'politik' untuk definisi lengkapnya",
+            "💡 Kata 'bisnis' bisa diartikan sebagai kegiatan jual beli",
+            "💡 Coba cari 'olahraga' untuk definisi aktivitas fisik"
+        ];
+        
+        const tipsListEn = [
+            "💡 Try searching for 'technology' to know its meaning",
+            "💡 The word 'love' has many meanings, try it!",
+            "💡 Search for 'politics' for complete definition",
+            "💡 'Business' can be defined as buying and selling activities",
+            "💡 Try 'sports' for definition of physical activity"
+        ];
+        
+        let currentTipIndex = 0;
+        
+        function updateTips() {
+            const tipsList = currentLang === 'id' ? tipsListId : tipsListEn;
+            currentTipIndex = (currentTipIndex + 1) % tipsList.length;
+            document.getElementById('tipsText').textContent = tipsList[currentTipIndex];
+        }
+        
+        function randomTip() {
+            const tipsList = currentLang === 'id' ? tipsListId : tipsListEn;
+            currentTipIndex = Math.floor(Math.random() * tipsList.length);
+            document.getElementById('tipsText').textContent = tipsList[currentTipIndex];
+        }
+        
+        // ========== SEARCH HISTORY ==========
+        function getSearchHistory() {
+            const history = localStorage.getItem('wobahkamus_search_history');
+            return history ? JSON.parse(history) : [];
+        }
+        
+        function saveSearchHistory(history) {
+            localStorage.setItem('wobahkamus_search_history', JSON.stringify(history.slice(0, 10)));
+        }
+        
+        function addToSearchHistory(keyword) {
+            if (!keyword || !keyword.trim()) return;
+            let history = getSearchHistory();
+            history = history.filter(item => item !== keyword);
+            history.unshift(keyword);
+            history = history.slice(0, 10);
+            saveSearchHistory(history);
+            renderSearchHistory();
+            renderFullHistory();
+        }
+        
+        function clearSearchHistory() {
+            localStorage.removeItem('wobahkamus_search_history');
+            renderSearchHistory();
+            renderFullHistory();
+        }
+        
+        function renderSearchHistory() {
+            const history = getSearchHistory();
+            const historyList = document.getElementById('historyList');
+            
+            if (history.length === 0) {
+                historyList.innerHTML = `<div class="empty-history">${translations[currentLang].emptyHistory}</div>`;
+                return;
+            }
+            
+            historyList.innerHTML = history.map(item => `
+                <div class="history-item" data-keyword="${item.replace(/"/g, '&quot;')}">
+                    <span class="history-icon">🔍</span>
+                    <span class="history-text">${item}</span>
+                </div>
+            `).join('');
+            
+            document.querySelectorAll('#historyList .history-item').forEach(el => {
+                el.addEventListener('click', () => {
+                    const keyword = el.dataset.keyword;
+                    document.getElementById('searchInput').value = keyword;
+                    fetchDefinition(keyword, true);
+                    document.getElementById('searchHistory').classList.remove('show');
+                });
+            });
+        }
+        
+        function renderFullHistory() {
+            const history = getSearchHistory();
+            const fullHistoryList = document.getElementById('fullHistoryList');
+            
+            if (history.length === 0) {
+                fullHistoryList.innerHTML = `<div class="empty-history">${translations[currentLang].emptyHistory}</div>`;
+                return;
+            }
+            
+            fullHistoryList.innerHTML = history.map(item => `
+                <div class="history-item" data-keyword="${item.replace(/"/g, '&quot;')}">
+                    <span class="history-icon">🔍</span>
+                    <span class="history-text">${item}</span>
+                </div>
+            `).join('');
+            
+            document.querySelectorAll('#fullHistoryList .history-item').forEach(el => {
+                el.addEventListener('click', () => {
+                    const keyword = el.dataset.keyword;
+                    document.getElementById('searchInput').value = keyword;
+                    fetchDefinition(keyword, true);
+                    document.getElementById('historyModal').classList.remove('active');
+                    document.body.style.overflow = '';
+                });
+            });
+        }
+        
+        // ========== FETCH DEFINISI ==========
+        async function fetchDefinition(word, saveToHistory = false) {
+            const container = document.getElementById('resultContainer');
+            isHomePage = false;
+            
+            if (!word || !word.trim()) {
+                showHomePage();
+                return;
+            }
+            
+            container.innerHTML = `<div class="loading"><div class="loading-spinner"></div> ${translations[currentLang].loading}</div>`;
+            
+            if (saveToHistory) {
+                addToSearchHistory(word);
+            }
+            
+            try {
+                const response = await fetch(`${API_URL}?question=${encodeURIComponent(word)}`);
+                const data = await response.json();
+                
+                if (data && data.answer) {
+                    displayDefinition(data, word);
+                } else {
+                    container.innerHTML = `<div class="empty-state">${translations[currentLang].emptyResult}${word}${translations[currentLang].emptyResultEnd}</div>`;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                container.innerHTML = `<div class="empty-state">${translations[currentLang].errorMsg}</div>`;
+            }
+        }
+        
+        function displayDefinition(data, query) {
+            const container = document.getElementById('resultContainer');
+            const mainContainer = document.getElementById('mainContainer');
+            
+            mainContainer.classList.remove('page-transition');
+            void mainContainer.offsetHeight;
+            mainContainer.classList.add('page-transition');
+            
+            const formattedAnswer = data.answer.replace(/\n/g, '<br><br>');
+            const sourcesList = data.sources.map(source => `<li class="source-item"><a href="${source}" target="_blank" rel="noopener noreferrer">${source}</a></li>`).join('');
+            
+            const html = `
+                <div class="result-card">
+                    <div class="result-word">📖 ${query}</div>
+                    <div class="result-answer">${formattedAnswer}</div>
+                    <div class="sources-section">
+                        <div class="sources-title">🔗 Sumber Referensi:</div>
+                        <ul class="source-list">${sourcesList}</ul>
+                    </div>
+                </div>
+            `;
+            
+            container.innerHTML = html;
+        }
+        
+        // ========== SHOW HOME PAGE ==========
+        function showHomePage() {
+            isHomePage = true;
+            const container = document.getElementById('resultContainer');
+            const t = translations[currentLang];
+            
+            const html = `
+                <div class="welcome-card">
+                    <div class="welcome-icon">📖</div>
+                    <div class="welcome-title">${t.welcomeTitle}</div>
+                    <div class="welcome-text">${t.welcomeText}</div>
+                    <div class="example-list">
+                        <button class="example-btn" data-word="teknologi">teknologi</button>
+                        <button class="example-btn" data-word="cinta">cinta</button>
+                        <button class="example-btn" data-word="politik">politik</button>
+                        <button class="example-btn" data-word="bisnis">bisnis</button>
+                        <button class="example-btn" data-word="olahraga">olahraga</button>
+                        <button class="example-btn" data-word="pendidikan">pendidikan</button>
+                    </div>
+                </div>
+            `;
+            container.innerHTML = html;
+            
+            document.querySelectorAll('.example-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const word = btn.dataset.word;
+                    document.getElementById('searchInput').value = word;
+                    fetchDefinition(word, true);
+                });
+            });
+        }
+        
+        // ========== SETUP SEARCH ==========
+        function setupSearch() {
+            const searchInput = document.getElementById('searchInput');
+            
+            searchInput.addEventListener('input', (e) => {
+                const keyword = e.target.value.trim();
+                if (searchTimeout) clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    if (keyword) {
+                        fetchDefinition(keyword, false);
+                    } else {
+                        showHomePage();
+                    }
+                }, 400);
+            });
+            
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    const keyword = e.target.value.trim();
+                    if (keyword) {
+                        fetchDefinition(keyword, true);
+                    } else {
+                        showHomePage();
+                    }
+                    document.getElementById('searchHistory').classList.remove('show');
+                }
+            });
+        }
+        
+        function setupSearchHistoryUI() {
+            const searchInput = document.getElementById('searchInput');
+            const searchHistoryDiv = document.getElementById('searchHistory');
+            
+            searchInput.addEventListener('focus', () => {
+                renderSearchHistory();
+                searchHistoryDiv.classList.add('show');
+            });
+            
+            document.addEventListener('click', (e) => {
+                if (!searchInput.contains(e.target) && !searchHistoryDiv.contains(e.target)) {
+                    searchHistoryDiv.classList.remove('show');
+                }
+            });
+            
+            document.getElementById('clearHistory').addEventListener('click', (e) => {
+                e.stopPropagation();
+                clearSearchHistory();
+            });
+        }
+        
+        // ========== SIDEBAR & OTHER ==========
+        function changeWord(word) {
+            document.getElementById('searchInput').value = word;
+            fetchDefinition(word, true);
+            if (window.innerWidth <= 768) closeSidebar();
+        }
+        
+        function goHome() {
+            document.getElementById('searchInput').value = '';
+            showHomePage();
+            if (window.innerWidth <= 768) closeSidebar();
+        }
+        
+        function openSidebar() {
+            document.getElementById('sidebar').classList.add('active');
+            document.getElementById('sidebarOverlay').classList.add('active');
+            document.getElementById('hamburger').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeSidebar() {
+            document.getElementById('sidebar').classList.remove('active');
+            document.getElementById('sidebarOverlay').classList.remove('active');
+            document.getElementById('hamburger').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        
+        function initTheme() {
+            const saved = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', saved);
+            const toggle = document.getElementById('themeToggle');
+            toggle.textContent = saved === 'dark' ? '☀️' : '🌙';
+            toggle.addEventListener('click', () => {
+                const current = document.documentElement.getAttribute('data-theme');
+                const next = current === 'dark' ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-theme', next);
+                localStorage.setItem('theme', next);
+                toggle.style.transform = 'rotate(360deg)';
+                setTimeout(() => { toggle.style.transform = ''; }, 300);
+                toggle.textContent = next === 'dark' ? '☀️' : '🌙';
+            });
+        }
+        
+        function initCookie() {
+            if (!localStorage.getItem('cookieConsent')) {
+                setTimeout(() => document.getElementById('cookieConsent').classList.add('show'), 500);
+            }
+            document.getElementById('acceptCookie').addEventListener('click', () => {
+                localStorage.setItem('cookieConsent', 'true');
+                document.getElementById('cookieConsent').classList.remove('show');
+            });
+        }
+        
+        function initEvents() {
+            document.getElementById('hamburger').addEventListener('click', () => {
+                if (document.getElementById('sidebar').classList.contains('active')) closeSidebar();
+                else openSidebar();
+            });
+            document.getElementById('sidebarOverlay').addEventListener('click', closeSidebar);
+            
+            document.querySelectorAll('.sidebar-item[data-word]').forEach(item => {
+                item.addEventListener('click', () => {
+                    changeWord(item.dataset.word);
+                });
+            });
+            
+            document.querySelectorAll('.sidebar-item[data-action="home"]').forEach(item => {
+                item.addEventListener('click', () => {
+                    goHome();
+                });
+            });
+            
+            document.getElementById('historyMenuBtn').addEventListener('click', () => {
+                renderFullHistory();
+                document.getElementById('historyModal').classList.add('active');
+                document.body.style.overflow = 'hidden';
+                closeSidebar();
+            });
+            
+            document.getElementById('closeHistoryModal').addEventListener('click', () => {
+                document.getElementById('historyModal').classList.remove('active');
+                document.body.style.overflow = '';
+            });
+            
+            document.getElementById('clearHistoryFull').addEventListener('click', () => {
+                clearSearchHistory();
+                renderFullHistory();
+            });
+            
+            document.getElementById('logoImage').addEventListener('click', () => {
+                goHome();
+                randomTip();
+            });
+            
+            document.getElementById('refreshTips').addEventListener('click', randomTip);
+            document.getElementById('langToggle').addEventListener('click', toggleLanguage);
+            
+            window.addEventListener('click', (e) => {
+                if (e.target === document.getElementById('historyModal')) {
+                    document.getElementById('historyModal').classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
+        }
+        
+        function init() {
+            initTheme();
+            initCookie();
+            initEvents();
+            setupSearchHistoryUI();
+            setupSearch();
+            renderSearchHistory();
+            renderFullHistory();
+            randomTip();
+            updateUILanguage();
+        }
+        
+        init();
+    </script>
+</body>
+</html>
